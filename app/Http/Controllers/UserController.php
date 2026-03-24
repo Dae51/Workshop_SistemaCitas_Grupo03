@@ -18,7 +18,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:admin,medico,paciente'
+            'role' => 'required|in:admin,medico,asistente,paciente',
+            'activo' => 'sometimes|boolean',
         ]);
 
         $user = User::create([
@@ -26,6 +27,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
             'role' => $validated['role'],
+            'activo' => $validated['activo'] ?? true,
         ]);
 
         return response()->json($user, 201);
@@ -45,7 +47,8 @@ class UserController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'sometimes|required|string|min:8',
-            'role' => 'sometimes|required|in:admin,medico,paciente'
+            'role' => 'sometimes|required|in:admin,medico,asistente,paciente',
+            'activo' => 'sometimes|boolean',
         ]);
 
         if (isset($validated['password'])) {

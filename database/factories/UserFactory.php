@@ -13,13 +13,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         // Si no le mandamos nada específico, por defecto tira al azar cualquier rol para rellenar
-        $role = fake()->randomElement(['admin', 'medico', 'paciente']);
+        $role = fake()->randomElement(['admin', 'medico', 'asistente', 'paciente']);
         
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => $role,
+            'activo' => true,
             // Magia acá: si es médico le asigna una especialidad al azar que ya esté creada, sino lo deja en null
             'especialidad_id' => $role === 'medico' 
                 ? Especialidad::inRandomOrder()->first()->id ?? Especialidad::factory() 
@@ -42,6 +43,14 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'role' => 'paciente',
+            'especialidad_id' => null,
+        ]);
+    }
+
+    public function asistente(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'asistente',
             'especialidad_id' => null,
         ]);
     }

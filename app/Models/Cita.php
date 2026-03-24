@@ -17,6 +17,13 @@ class Cita extends Model
         'estado',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'fecha' => 'date',
+        ];
+    }
+
     // Relación para sacar fácilmente todos los datos del paciente con solo tener la cita
     public function paciente()
     {
